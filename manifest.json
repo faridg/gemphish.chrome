@@ -4,8 +4,9 @@
     "version": "1.0",
     "description": "A simple side panel extension",
     "permissions": [
-      "sidePanel"
-    ],
+        "sidePanel",
+        "contextMenus"
+  ],
     "side_panel": {
       "default_path": "panel.html"
     },
