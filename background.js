@@ -2,12 +2,18 @@
 chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
 
 // setup context menu
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener((details) => {
+    // create context menu
     chrome.contextMenus.create({
         id: "openSidePanel",
-        title: "Open Side Panel",
+        title: "Analyze with Gemphisher",
         contexts: ["all"]
     });
+
+    // open options page on install/update
+    if (details.reason === 'install' || details.reason === 'update') {
+        chrome.runtime.openOptionsPage();
+    }
 });
 
 // handle context menu click

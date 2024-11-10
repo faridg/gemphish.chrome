@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "Gempanion",
+    "name": "Gemphisher",
     "version": "1.0",
-    "description": "Your Gemini AI web companion",
+    "description": "Your Gemini AI web companion for safe browsing",
     "permissions": [
         "sidePanel",
         "contextMenus",

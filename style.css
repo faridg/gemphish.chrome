@@ -91,6 +91,15 @@ h1 {
     padding: 20px;
 }
 
+.message a {
+    color: #1a73e8;
+    text-decoration: none;
+}
+
+.message a:hover {
+    text-decoration: underline;
+}
+
 .loading {
     text-align: center;
     padding: 20px;

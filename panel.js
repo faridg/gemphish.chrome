@@ -87,7 +87,7 @@ function displayUnsupportedPage() {
     document.getElementById('content').innerHTML = `
         <div class="message">
             <p>This extension only works on regular websites starting with http:// or https://</p>  
-            <p>Please visit a website for it to work.</p>
+            <p>Please visit a website for it to work, e.g. <a href="http://example.com" target="_blank">example.com</a></p>
         </div>
     `;
 }

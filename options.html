@@ -1,21 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Gempanion Options</title>
+    <title>Gemphisher Settings</title>
     <link rel="stylesheet" href="options.css">
 </head>
 <body>
     <div class="container">
-        <h1>Options</h1>
+        <h1>Welcome to Gemphisher! &#x1F50D;</h1>
+        
+        <div class="instructions">
+            <h2>Getting Started</h2>
+            <ol class="steps">
+                <li>Create a Google Cloud account if you don't have one:
+                    <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a>
+                </li>
+                <li>Enable the Gemini API for your project</li>
+                <li>Create an API key with access to Gemini API</li>
+                <li>Copy your API key and paste it below</li>
+            </ol>
+        </div>
+
         <div class="field">
             <label for="apiKey">Google Gemini API Key:</label>
-            <div class="input-group">
-                <input type="password" id="apiKey" placeholder="Enter your API key">
-                <button id="toggleKey" class="toggle-btn" title="Toggle visibility">&#x1F441;</button>
-            </div>
+            <input type="password" id="apiKey" placeholder="Enter your Gemini API key">
+            <p class="note">Your API key is stored locally and is only used to communicate with the Gemini API.</p>
         </div>
-        <button id="save">Save</button>
+
+        <button id="save">Save Settings</button>
         <div id="status"></div>
+
+        <div class="instructions" style="margin-top: 24px;">
+            <h2>How to Use</h2>
+            <ul>
+                <li>Click the extension icon or right-click anywhere to open the analysis panel</li>
+                <li>The extension will analyze the current webpage for potential phishing risks</li>
+                <li>View the risk assessment and detailed analysis in the side panel</li>
+            </ul>
+        </div>
     </div>
     <script src="options.js"></script>
 </body>
