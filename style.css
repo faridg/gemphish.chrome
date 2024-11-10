@@ -2,10 +2,21 @@ body {
     font-family: system-ui, -apple-system, sans-serif;
     margin: 16px;
     line-height: 1.5;
+    font-size: 14px;
 }
 
 .url {
     color: #666;
     font-size: 12px;
     margin-bottom: 8px;
+    word-break: break-all;
+}
+
+h1 {
+    font-size: 18px;
+    margin: 0 0 16px 0;
+}
+
+#content {
+    white-space: pre-wrap;
 }
