@@ -51,3 +51,9 @@ h1 {
 #content {
     white-space: pre-wrap;
 }
+
+.loading {
+    text-align: center;
+    padding: 20px;
+    font-size: 20px;
+}

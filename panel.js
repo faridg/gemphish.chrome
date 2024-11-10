@@ -1,15 +1,18 @@
 import { getDomainAge, getParentDomain } from './domain-utils.js';
+import { generateSummary } from './api-utils.js';
 
-// extract content from current tab
+// extract content from current tab and generate summary
 async function updateContent() {
     try {
-        // get current tab
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
         if (!tab) return;
 
         // get domain info
         const domainAge = await getDomainAge(tab.url);
         const parentDomain = getParentDomain(new URL(tab.url).hostname);
+
+        // show loading state
+        displayLoading();
 
         // execute content extraction
         const [result] = await chrome.scripting.executeScript({
@@ -35,20 +38,36 @@ async function updateContent() {
             }
         });
 
+        // generate summary
+        const summary = await generateSummary(result.result.content);
+
         displayContent({
             ...result.result,
+            summary,
             domainAge,
             parentDomain
         });
     } catch (e) {
         console.error('Failed to update content:', e);
+        displayError(e.message);
     }
 }
 
-// update ui with extracted content
+// display loading state
+function displayLoading() {
+    document.getElementById('title').textContent = 'Generating summary...';
+    document.getElementById('content').innerHTML = '<div class="loading">⏳</div>';
+}
+
+// display error state
+function displayError(message) {
+    document.getElementById('content').textContent = `Error: ${message}`;
+}
+
+// update ui with content
 function displayContent(data) {
     document.getElementById('title').textContent = data.title;
-    document.getElementById('content').textContent = data.content;
+    document.getElementById('content').textContent = data.summary;
     document.getElementById('url').textContent = data.url;
     document.getElementById('domain-age').textContent = 
         `${data.parentDomain} - ${data.domainAge}`;
@@ -66,7 +85,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     }
 });
 
-// initial content load
+// init
 document.addEventListener('DOMContentLoaded', () => {
     updateContent();
     document.getElementById('settings').addEventListener('click', openOptions);
