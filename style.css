@@ -5,6 +5,17 @@ body {
     font-size: 14px;
 }
 
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 16px;
+}
+
+.url-container {
+    flex: 1;
+}
+
 .url {
     color: #666;
     font-size: 12px;
@@ -15,8 +26,21 @@ body {
 .domain-age {
     color: #666;
     font-size: 12px;
-    margin-bottom: 8px;
     font-style: italic;
+}
+
+.settings-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    font-size: 16px;
+    margin-left: 8px;
+    border-radius: 4px;
+}
+
+.settings-btn:hover {
+    background: #f0f0f0;
 }
 
 h1 {

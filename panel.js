@@ -54,6 +54,11 @@ function displayContent(data) {
         `${data.parentDomain} - ${data.domainAge}`;
 }
 
+// open options page
+function openOptions() {
+    chrome.runtime.openOptionsPage();
+}
+
 // watch for tab updates
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status === 'complete') {
@@ -62,4 +67,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 });
 
 // initial content load
-document.addEventListener('DOMContentLoaded', updateContent);
+document.addEventListener('DOMContentLoaded', () => {
+    updateContent();
+    document.getElementById('settings').addEventListener('click', openOptions);
+});
