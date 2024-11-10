@@ -1,11 +1,22 @@
 import { getDomainAge, getParentDomain } from './domain-utils.js';
 import { generateSummary } from './api-utils.js';
 
-// extract content from current tab and generate summary
+// check if url is supported
+function isValidUrl(url) {
+    return url.startsWith('http://') || url.startsWith('https://');
+}
+
+// extract content and generate summary
 async function updateContent() {
     try {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
         if (!tab) return;
+
+        // check if valid url
+        if (!isValidUrl(tab.url)) {
+            displayUnsupportedPage();
+            return;
+        }
 
         // get domain info
         const domainAge = await getDomainAge(tab.url);
@@ -51,6 +62,19 @@ async function updateContent() {
         console.error('Failed to update content:', e);
         displayError(e.message);
     }
+}
+
+// display message for unsupported pages
+function displayUnsupportedPage() {
+    document.getElementById('url').textContent = 'Unsupported page';
+    document.getElementById('domain-age').textContent = '';
+    document.getElementById('title').textContent = 'Try visiting a real website!';
+    document.getElementById('content').innerHTML = `
+        <div class="message">
+            <p>This extension only works on regular websites starting with http:// or https://</p>  
+            <p>Please visit a website for it to work.</p>
+        </div>
+    `;
 }
 
 // display loading state
