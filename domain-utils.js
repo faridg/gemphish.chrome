@@ -4,7 +4,7 @@ function calculateDomainAge(createDate) {
     let years = now.getFullYear() - createDate.getFullYear();
     let months = now.getMonth() - createDate.getMonth();
     if (months < 0) { years--; months += 12; }
-    return `${years}y ${months}m`;
+    return { text: `${years}y ${months}m`, years };  // return object
 }
 
 // get parent domain from url
@@ -26,21 +26,21 @@ async function getDomainAge(url) {
     const parentDomain = getParentDomain(hostname);
     const tld = parentDomain.split('.').pop().toLowerCase();
 
-    if (!rdapEndpoints[tld]) return 'unsupported TLD';
+    if (!rdapEndpoints[tld]) return { text: 'unsupported TLD', years: 'unknown' };
 
     try {
         const response = await fetch(`${rdapEndpoints[tld]}${parentDomain}`);
-        if (!response.ok) return 'not found';
+        if (!response.ok) return { text: 'not found', years: 'unknown' };
         
         const data = await response.json();
         const event = data.events?.find(e => e.eventAction === "registration") 
                   || data.events?.find(e => e.eventAction === "created");
         
-        if (!event) return 'no data';
+        if (!event) return { text: 'no data', years: 'unknown' };
         
         return calculateDomainAge(new Date(event.eventDate));
     } catch (e) {
-        return 'error';
+        return { text: 'error', years: 'unknown' }; 
     }
 }
 

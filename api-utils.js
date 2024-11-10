@@ -5,7 +5,7 @@ async function getGeminiApiKey() {
 }
 
 // generate summary using gemini
-async function generateSummary(content) {
+async function generateSummary(content, domainAgeYears) {
     const apiKey = await getGeminiApiKey();
     if (!apiKey) {
         return 'Please set Gemini API key in extension options (⚙️)';
@@ -22,7 +22,11 @@ async function generateSummary(content) {
                 body: JSON.stringify({
                     contents: [{
                         parts: [{
-                            text: `Summarize this webpage content concisely: ${content}`
+                            text: `Analyze this webpage for phishing risks. Consider the following: 
+                                - **Content:** ${content} 
+                                - **Domain Age:** ${domainAgeYears} years old.
+                                Provide a concise summary of the risks, including any suspicious elements or tactics. 
+                                Rank the risk level as 'Low', 'Medium', or 'High'.`
                         }]
                     }]
                 })
@@ -36,8 +40,8 @@ async function generateSummary(content) {
         const data = await response.json();
         return data.candidates[0].content.parts[0].text;
     } catch (e) {
-        console.error('Summary generation error:', e);
-        return `Error generating summary: ${e.message}`;
+        console.error('Analysis error:', e);
+        return `Error analyzing: ${e.message}`;
     }
 }
 

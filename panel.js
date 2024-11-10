@@ -50,12 +50,12 @@ async function updateContent() {
         });
 
         // generate summary
-        const summary = await generateSummary(result.result.content);
+        const summary = await generateSummary(result.result.content, domainAge.years);
 
         displayContent({
             ...result.result,
             summary,
-            domainAge,
+            domainAge: domainAge.text,
             parentDomain
         });
     } catch (e) {
@@ -79,7 +79,7 @@ function displayUnsupportedPage() {
 
 // display loading state
 function displayLoading() {
-    document.getElementById('title').textContent = 'Generating summary...';
+    document.getElementById('title').textContent = 'Analyzing...';
     document.getElementById('content').innerHTML = '<div class="loading">⏳</div>';
 }
 
