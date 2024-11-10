@@ -26,7 +26,7 @@ async function getDomainAge(url) {
     const parentDomain = getParentDomain(hostname);
     const tld = parentDomain.split('.').pop().toLowerCase();
 
-    if (!rdapEndpoints[tld]) return { text: 'unsupported TLD', years: 'unknown' };
+    if (!rdapEndpoints[tld]) return { text: 'age unknown', years: 'unknown' };
 
     try {
         const response = await fetch(`${rdapEndpoints[tld]}${parentDomain}`);
