@@ -17,14 +17,34 @@ label {
     margin-bottom: 5px;
 }
 
+.input-group {
+    display: flex;
+    gap: 8px;
+}
+
+input[type="password"],
 input[type="text"] {
-    width: 100%;
+    flex: 1;
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    font-size: 14px;
+    font-family: monospace;
 }
 
-button {
+.toggle-btn {
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 0 12px;
+}
+
+.toggle-btn:hover {
+    background: #f5f5f5;
+}
+
+button#save {
     background: #1a73e8;
     color: white;
     border: none;

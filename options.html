@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Extension Options</title>
+    <title>Gempanion Options</title>
     <link rel="stylesheet" href="options.css">
 </head>
 <body>
@@ -9,7 +9,10 @@
         <h1>Options</h1>
         <div class="field">
             <label for="apiKey">Google Gemini API Key:</label>
-            <input type="text" id="apiKey" placeholder="Enter your API key">
+            <div class="input-group">
+                <input type="password" id="apiKey" placeholder="Enter your API key">
+                <button id="toggleKey" class="toggle-btn" title="Toggle visibility">&#x1F441;</button>
+            </div>
         </div>
         <button id="save">Save</button>
         <div id="status"></div>
