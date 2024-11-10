@@ -6,7 +6,7 @@ chrome.runtime.onInstalled.addListener((details) => {
     // create context menu
     chrome.contextMenus.create({
         id: "openSidePanel",
-        title: "Analyze with Gemphisher",
+        title: "Analyze with Gemphish",
         contexts: ["all"]
     });
 

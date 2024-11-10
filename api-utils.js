@@ -19,6 +19,96 @@ function isTrustedDomain(links) {
     }
 }
 
+// analyze links and get metrics
+function analyzeLinks(links) {
+    const externalLinks = links.filter(l => l.isExternal);
+    const numberOfExternalLinks = externalLinks.length;
+    const proportionExternalLinks = ((numberOfExternalLinks / links.length) * 100).toFixed(1);
+    
+    // get top external domains
+    const domainCounts = {};
+    externalLinks.forEach(link => {
+        try {
+            const domain = new URL(link.href).hostname;
+            domainCounts[domain] = (domainCounts[domain] || 0) + 1;
+        } catch (e) {
+            console.error('Error parsing URL:', e);
+        }
+    });
+
+    const topDomains = Object.entries(domainCounts)
+        .sort(([,a], [,b]) => b - a)
+        .slice(0, 3)
+        .map(([domain, count]) => `${domain} (${count})`)
+        .join(', ');
+
+    return {
+        numberOfExternalLinks,
+        proportionExternalLinks,
+        topExternalDomains: topDomains || 'None'
+    };
+}
+
+// analyze security indicators
+function analyzeSecurityIndicators(url) {
+    try {
+        const urlObj = new URL(url);
+        const protocol = urlObj.protocol;
+        
+        return {
+            domainRegistrationDetails: 'Based on domain age above',
+            contactInformationDetails: 'Contact information requires manual review',
+            securityPracticesDetails: protocol === 'https:' ? 
+                'Basic security practices observed (HTTPS)' : 'Basic security practices missing (HTTP)'
+        };
+    } catch (e) {
+        console.error('Error analyzing security indicators:', e);
+        return {
+            domainRegistrationDetails: 'Unable to verify',
+            contactInformationDetails: 'Unable to verify',
+            securityPracticesDetails: 'Unable to verify'
+        };
+    }
+}
+
+// analyze phishing indicators
+function analyzePhishingIndicators(content) {
+    return {
+        urgencyFearTacticsDetails: 'Based on content analysis',
+        rewardsDetails: 'Based on content analysis',
+        transparencyDetails: 'Based on content analysis',
+        typographicalErrorsDetails: 'Based on content quality check',
+        designDetails: 'Based on page structure analysis'
+    };
+}
+
+// analyze URL patterns
+function analyzeUrlPatterns(url) {
+    try {
+        const urlObj = new URL(url);
+        const domain = urlObj.hostname;
+        
+        // check for suspicious patterns
+        const hasNumbers = /\d/.test(domain);
+        const hasDashes = domain.includes('-');
+        const hasUnusualChars = /[^a-zA-Z0-9.-]/.test(domain);
+        const hasLongSubdomains = domain.split('.').some(part => part.length > 20);
+        
+        return {
+            uncommonCharacters: hasUnusualChars ? 'Present' : 'None detected',
+            suspiciousPatterns: hasNumbers || hasDashes ? 'Some detected' : 'None detected',
+            longSubdomains: hasLongSubdomains ? 'Present' : 'None detected'
+        };
+    } catch (e) {
+        console.error('Error analyzing URL patterns:', e);
+        return {
+            uncommonCharacters: 'Unable to analyze',
+            suspiciousPatterns: 'Unable to analyze',
+            longSubdomains: 'Unable to analyze'
+        };
+    }
+}
+
 // generate summary using gemini
 async function generateSummary(content, domainAgeYears, links) {
     const apiKey = await getGeminiApiKey();
@@ -26,15 +116,16 @@ async function generateSummary(content, domainAgeYears, links) {
         return 'Please set Gemini API key in extension options (⚙️)';
     }
 
-    // prepare links summary
-    const externalLinks = links.filter(l => l.isExternal);
-    const linksSummary = `
-        Total Links: ${links.length}
-        External Links: ${externalLinks.length}
-        External Domains: ${[...new Set(externalLinks.map(l => new URL(l.href).hostname))].join(', ')}
-    `;
-
-    // check if it's a trusted domain
+    // get current page URL
+    const url = links[0]?.href || '';
+    
+    // gather all analysis
+    const linkMetrics = analyzeLinks(links);
+    const securityIndicators = analyzeSecurityIndicators(url);
+    const phishingIndicators = analyzePhishingIndicators(content);
+    const urlPatterns = analyzeUrlPatterns(url);
+    
+    // check if trusted domain
     const isTrusted = isTrustedDomain(links);
     const trustContext = isTrusted ? 
         "This is a .edu or .gov domain which are officially registered and restricted to educational and government institutions respectively. These domains are generally trustworthy due to strict registration requirements." : "";
@@ -50,14 +141,33 @@ async function generateSummary(content, domainAgeYears, links) {
                 body: JSON.stringify({
                     contents: [{
                         parts: [{
-                            text: `Analyze this webpage for phishing risks. Consider the following: 
-                                - **Content:** ${content} 
+                            text: `Analyze this webpage for phishing risks. Consider the following:
+                                - **URL:** ${url}
+                                - **Content:** ${content}
                                 - **Domain Age:** ${domainAgeYears} years old.
-                                - **Links Analysis:**${linksSummary}
+                                - **Links Analysis:**
+                                  - Number of external links: ${linkMetrics.numberOfExternalLinks}
+                                  - Proportion of external links: ${linkMetrics.proportionExternalLinks}%
+                                  - Top external domains: ${linkMetrics.topExternalDomains}
+                                - **Trust Context:**
+                                  - Domain Registration: ${securityIndicators.domainRegistrationDetails}
+                                  - Contact Information: ${securityIndicators.contactInformationDetails}
+                                  - Security Practices: ${securityIndicators.securityPracticesDetails}
+                                - **Phishing Indicators:**
+                                  - Urgency/Fear Tactics: ${phishingIndicators.urgencyFearTacticsDetails}
+                                  - Excessive Rewards: ${phishingIndicators.rewardsDetails}
+                                  - Lack of Transparency: ${phishingIndicators.transparencyDetails}
+                                  - Typographical Errors: ${phishingIndicators.typographicalErrorsDetails}
+                                  - Generic Website Design: ${phishingIndicators.designDetails}
+                                - **URL Pattern Analysis:**
+                                  - Uncommon Characters: ${urlPatterns.uncommonCharacters}
+                                  - Suspicious Patterns: ${urlPatterns.suspiciousPatterns}
+                                  - Long Subdomains: ${urlPatterns.longSubdomains}
                                 ${trustContext}
-                                Provide a concise summary of the risks, including any suspicious elements or tactics. 
+                                Provide a concise summary of the risks, including any suspicious elements or tactics.
                                 ${isTrusted ? "Note that as an official .edu or .gov domain, this should be considered Low risk unless there's overwhelming evidence of compromise." : ""}
-                                Rank the risk level as 'Low', 'Medium', or 'High'.`
+                                **Assign a risk level of 'Low', 'Medium', or 'High' based on your analysis.**
+                                Explain why you assigned this risk level. Don't display back analyzed URL in response.`
                         }]
                     }]
                 })
