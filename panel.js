@@ -1,9 +1,15 @@
+import { getDomainAge, getParentDomain } from './domain-utils.js';
+
 // extract content from current tab
 async function updateContent() {
     try {
         // get current tab
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
         if (!tab) return;
+
+        // get domain info
+        const domainAge = await getDomainAge(tab.url);
+        const parentDomain = getParentDomain(new URL(tab.url).hostname);
 
         // execute content extraction
         const [result] = await chrome.scripting.executeScript({
@@ -29,7 +35,11 @@ async function updateContent() {
             }
         });
 
-        displayContent(result.result);
+        displayContent({
+            ...result.result,
+            domainAge,
+            parentDomain
+        });
     } catch (e) {
         console.error('Failed to update content:', e);
     }
@@ -40,6 +50,8 @@ function displayContent(data) {
     document.getElementById('title').textContent = data.title;
     document.getElementById('content').textContent = data.content;
     document.getElementById('url').textContent = data.url;
+    document.getElementById('domain-age').textContent = 
+        `${data.parentDomain} - ${data.domainAge}`;
 }
 
 // watch for tab updates

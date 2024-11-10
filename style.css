@@ -8,8 +8,15 @@ body {
 .url {
     color: #666;
     font-size: 12px;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     word-break: break-all;
+}
+
+.domain-age {
+    color: #666;
+    font-size: 12px;
+    margin-bottom: 8px;
+    font-style: italic;
 }
 
 h1 {
