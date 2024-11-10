@@ -5,8 +5,14 @@
     "description": "A simple side panel extension",
     "permissions": [
         "sidePanel",
-        "contextMenus"
-  ],
+        "contextMenus",
+        "activeTab",
+        "scripting",
+        "tabs"
+    ],
+     "host_permissions": [
+        "<all_urls>"
+    ],
     "side_panel": {
       "default_path": "panel.html"
     },

@@ -15,7 +15,8 @@ function extractReadableContent() {
     
     return {
         title: document.title,
-        content: content.trim()
+        content: content.trim(),
+        url: window.location.href
     };
 }
 
