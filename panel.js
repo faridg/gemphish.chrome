@@ -29,6 +29,7 @@ async function updateContent() {
         const [result] = await chrome.scripting.executeScript({
             target: { tabId: tab.id },
             func: () => {
+                // extract main content
                 const contentElements = document.querySelectorAll('article, main, [role="main"], .main-content, #main-content');
                 let content = '';
                 
@@ -40,17 +41,31 @@ async function updateContent() {
                         .map(p => p.innerText)
                         .join('\n\n');
                 }
-                
+
+                // extract all links
+                const links = Array.from(document.getElementsByTagName('a'))
+                    .map(a => ({
+                        text: a.innerText.trim(),
+                        href: a.href,
+                        isExternal: a.href.startsWith('http') && !a.href.includes(window.location.hostname)
+                    }))
+                    .filter(link => link.text && link.href); // filter out empty links
+
                 return {
                     title: document.title,
                     content: content.trim(),
-                    url: window.location.href
+                    url: window.location.href,
+                    links: links
                 };
             }
         });
 
         // generate summary
-        const summary = await generateSummary(result.result.content, domainAge.years);
+        const summary = await generateSummary(
+            result.result.content, 
+            domainAge.years,
+            result.result.links
+        );
 
         displayContent({
             ...result.result,
