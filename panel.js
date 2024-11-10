@@ -105,8 +105,36 @@ function displayError(message) {
 
 // update ui with content
 function displayContent(data) {
+    // extract risk level from summary
+    const riskMatch = data.summary.match(/Risk level.*?(Low|Medium|High)/i);
+    const riskLevel = riskMatch ? riskMatch[1].toLowerCase() : 'unknown';
+    
+    // get risk icon and color
+    const riskInfo = {
+        low: { icon: '🟢', color: '#2ecc71' },
+        medium: { icon: '🟡', color: '#f1c40f' },
+        high: { icon: '🔴', color: '#e74c3c' },
+        unknown: { icon: '⚪', color: '#95a5a6' }
+    }[riskLevel];
+
+    // create risk level element
+    const riskHtml = `
+        <div class="risk-level" style="color: ${riskInfo.color};">
+            ${riskInfo.icon} Risk Level: ${riskLevel.toUpperCase()}
+        </div>
+    `;
+
+    // parse markdown safely
+    let formattedContent;
+    try {
+        formattedContent = marked.parse(data.summary);
+    } catch (e) {
+        console.error('Markdown parsing error:', e);
+        formattedContent = data.summary;
+    }
+
     document.getElementById('title').textContent = data.title;
-    document.getElementById('content').textContent = data.summary;
+    document.getElementById('content').innerHTML = riskHtml + formattedContent;
     document.getElementById('url').textContent = data.url;
     document.getElementById('domain-age').textContent = 
         `${data.parentDomain} - ${data.domainAge}`;
