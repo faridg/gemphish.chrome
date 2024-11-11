@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="icons/icon128.png" alt="Gemphish Logo" width="128" height="128" style="margin-bottom: 30px">
+</div>
+
 # Gemphish - Your AI Web Safety Companion 🛡️
 
 Gemphish is a Chrome extension that uses Google's Gemini AI to analyze web pages in real-time and protect you from potential online threats. Think of it as having a security expert by your side while browsing the internet, helping you make informed decisions about the websites you visit.
@@ -42,8 +46,8 @@ Gemphish provides real-time safety analysis of websites through an easy-to-use s
 
 2. **Load the Extension in Chrome**
    - Open Chrome and go to `chrome://extensions/`
-   - Enable "Developer mode" in the top right corner
-   - Click "Load unpacked" and select the extension directory
+   - Enable "Developer mode" in the top right corner <img src="assets/developer-mode.png" alt="Enable Developer Mode" width="100%">
+   - Click "Load unpacked" and select the extension directory <img src="assets/load-unpacked.png" alt="Load Unpacked Extension" width="100%">
 
 3. **Configure the Extension**
    - Click the extension settings icon (⚙️) in the sidebar
@@ -52,7 +56,10 @@ Gemphish provides real-time safety analysis of websites through an easy-to-use s
 
 ### Usage
 
-1. Click the Gemphish icon in your Chrome toolbar or right click on any page and select "Analyze with Gemphish"
+1. Click the Gemphish icon in your Chrome toolbar or right click on any page and select "Analyze with Gemphish" <div style="display: flex; justify-content: space-between; margin: 20px 0;">
+  <img src="assets/sidebar-view.png" alt="Sidebar Analysis View" width="48%">
+  <img src="assets/context-menu.png" alt="Context Menu View" width="48%">
+</div>
 2. The sidebar will open, automatically analyzing the current webpage
 3. View the risk assessment and detailed analysis
 4. Use this information to make informed decisions about the website's safety
@@ -85,6 +92,11 @@ Key files:
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+<div style="display: flex; justify-content: space-between; margin-top: 40px;">
+  <img src="assets/banner1.png" alt="Gemphish Banner 1" width="48%">
+  <img src="assets/banner2.png" alt="Gemphish Banner 2" width="48%">
+</div>
 
 ## ⚠️ Disclaimer
 
